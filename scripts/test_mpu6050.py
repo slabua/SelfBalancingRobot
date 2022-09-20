@@ -14,8 +14,8 @@ period = 0.01
 print(imu.accel_range, imu.gyro_range)
 
 while True:
-    #print(imu.accel.xyz,imu.gyro.xyz,imu.temperature,end='\r')
-    
+    # print(imu.accel.xyz,imu.gyro.xyz,imu.temperature,end='\r')
+
     # Read sensor data
     aX = imu.accel.x
     aY = imu.accel.y
@@ -24,7 +24,7 @@ while True:
     gY = imu.gyro.y
     gZ = imu.gyro.z
     tem = imu.temperature
-    print(aX,"\t",aY,"\t",aZ,"\t",gX,"\t",gY,"\t",gZ,"\t",tem,"        ",end="\r")
-    
-    sleep(period)
+    print(aX, "\t", aY, "\t", aZ, "\t", gX, "\t", gY,
+          "\t", gZ, "\t", tem, "        ", end="\r")
 
+    sleep(period)

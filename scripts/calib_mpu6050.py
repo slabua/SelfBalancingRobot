@@ -21,8 +21,8 @@ gY = 0
 gZ = 0
 
 for n in range(n_samples):
-    #print(imu.accel.xyz,imu.gyro.xyz,imu.temperature,end='\r')
-    
+    # print(imu.accel.xyz,imu.gyro.xyz,imu.temperature,end='\r')
+
     # Read sensor data
     aX += imu.accel.x
     aY += imu.accel.y
@@ -30,7 +30,7 @@ for n in range(n_samples):
     gX += imu.gyro.x
     gY += imu.gyro.y
     gZ += imu.gyro.z
-    
+
     sleep(period)
 
 aX /= n_samples
