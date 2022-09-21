@@ -1,7 +1,6 @@
 from selfbalancingrobot_mpu import MPU as SBRMPU
 from machine import Pin, PWM
 
-import math
 import time
 
 
