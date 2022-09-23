@@ -16,6 +16,7 @@ offset = 1600 + 2800
 servo_value = None
 
 imu = SBRMPU()
+imu.calib()
 
 period = 0.02
 

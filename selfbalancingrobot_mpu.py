@@ -3,11 +3,14 @@ from machine import Pin, I2C
 
 import math
 import time
+import ujson
 
 
 class MPU():
 
     def __init__(self, sda=0, scl=1, parent=None):
+
+        print("Initialising MPU6050...")
 
         i2c = I2C(0, sda=Pin(sda), scl=Pin(scl), freq=400000)
 
@@ -15,14 +18,6 @@ class MPU():
         self.imu.accel_range = 0
         self.imu.gyro_range = 1
         # self.imu.filter_range = 0
-
-        # imu calib errors
-        self.aXerr = 0.03252075
-        self.aYerr = 0.001260986
-        self.aZerr = -0.03212547
-        self.gXerr = -1.14307
-        self.gYerr = -0.0766717
-        self.gZerr = 0.7535422
 
         self.dt = 0
         self.pc = 99.0  # 99.99
@@ -32,10 +27,89 @@ class MPU():
         self.gyro_pitch = None
         self.gyro_yaw = 0
 
-        print("MPU6050 Initialised successfully.")
+        # imu calib errors
+        # self.read_calib()
+        self.aXerr = 0
+        self.aYerr = 0
+        self.aZerr = 0
+        self.gXerr = 0
+        self.gYerr = 0
+        self.gZerr = 0
+
+        print("MPU6050 Initialised.")
         # print(self.imu.accel_range, self.imu.gyro_range)
 
         self.start = time.ticks_us()
+
+    def calib(self, period=0.02, n_samples=1000):
+        print("Running calibration...")
+
+        try:
+            with open('calib.json', 'r') as calib_file:
+                self.read_calib(calib_file)
+
+        except OSError:
+            print("Calibration file not found.")
+            print("Starting calibration...")
+
+            for n in range(n_samples):
+                # print(imu.accel.xyz,imu.gyro.xyz,imu.temperature,end='\r')
+
+                # Read sensor data
+                self.aXerr += self.imu.accel.x
+                self.aYerr += self.imu.accel.y
+                self.aZerr += self.imu.accel.z
+                self.gXerr += self.imu.gyro.x
+                self.gYerr += self.imu.gyro.y
+                self.gZerr += self.imu.gyro.z
+
+                time.sleep(period)
+
+            self.aXerr /= n_samples
+            self.aYerr /= n_samples
+            self.aZerr /= n_samples
+            self.gXerr /= n_samples
+            self.gYerr /= n_samples
+            self.gZerr /= n_samples
+
+            self.aZerr -= 1
+
+            print("Calibration errors:")
+            print(self.aXerr, "\t", self.aYerr, "\t", self.aZerr, "\t",
+                  self.gXerr, "\t", self.gYerr, "\t", self.gZerr)
+
+            self.write_calib()
+
+        print("Calibration complete.")
+
+    def read_calib(self, calib_file):
+        print("Reading calibration file...")
+
+        calib = ujson.load(calib_file)
+
+        print("Calibration file found.")
+        print("Reading calibration data...")
+
+        self.aXerr = calib['aXerr']
+        self.aYerr = calib['aYerr']
+        self.aZerr = calib['aZerr']
+        self.gXerr = calib['gXerr']
+        self.gYerr = calib['gYerr']
+        self.gZerr = calib['gZerr']
+
+    def write_calib(self):
+        print("Writing calibration...")
+        calib = {
+            "aXerr": self.aXerr,
+            "aYerr": self.aYerr,
+            "aZerr": self.aZerr,
+            "gXerr": self.gXerr,
+            "gYerr": self.gYerr,
+            "gZerr": self.gZerr
+        }
+        with open('calib.json', 'w') as calib_file:
+            ujson.dump(calib, calib_file)
+        print("Calibration file written.")
 
     def get_roll_pitch(self, in_loop=True):
 
