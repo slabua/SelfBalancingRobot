@@ -1,12 +1,29 @@
+# -*- coding: utf-8 -*-
+"""Self Balancing Robot
+"""
+
 from selfbalancingrobot_mpu import MPU as SBRMPU
 from machine import Pin, PWM
 
 import time
 
+__author__ = "Salvatore La Bua"
+__copyright__ = "Copyright 2022, Salvatore La Bua"
+__license__ = "GPL"
+__version__ = "0.1.0"
+__maintainer__ = "Salvatore La Bua"
+__email__ = "slabua@gmail.com"
+__status__ = "Development"
 
+
+# Parameters
+PERIOD = 0.02
+
+# LED
 led = Pin("LED", Pin.OUT)
 led.off()
 
+# Servo
 servo = PWM(Pin(2))
 servo.freq(50)
 # factor = (8400 - 1600) / 180
@@ -15,10 +32,9 @@ factor = (8400 - 1600) / 180
 offset = 1600 + 2800
 servo_value = None
 
+# IMU
 imu = SBRMPU()
 imu.calib()
-
-period = 0.02
 
 while True:
     comp_roll, comp_pitch = imu.get_roll_pitch()
@@ -37,4 +53,4 @@ while True:
                           max(min(int(- comp_roll * factor + offset), 8400), 1600))
     servo.duty_u16(servo_value)
 
-    time.sleep(period)
+    time.sleep(PERIOD)
