@@ -3,6 +3,7 @@
 """
 
 from machine import Pin, PWM
+from PID import PID
 from selfbalancingrobot_mpu import MPU as SBRMPU
 
 import time
@@ -35,6 +36,10 @@ servo_value = None
 # IMU
 imu = SBRMPU()
 
+# PID
+pid = PID(1, 0.1, 1, setpoint=0, scale='us')
+pid.output_limits = (1600, 8400)
+
 while True:
     comp_roll, comp_pitch = imu.get_roll_pitch()
 
@@ -44,6 +49,9 @@ while True:
         led.toggle()
     else:
         led.value(0)
+
+    # pid.setpoint = (comp_roll * factor + offset)
+    # servo_value = int(pid(-comp_roll))
 
     if servo_value is None:
         servo_value = max(min(int(- comp_roll * factor + offset), 8400), 1600)
