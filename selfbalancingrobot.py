@@ -2,8 +2,8 @@
 """Self Balancing Robot
 """
 
-from selfbalancingrobot_mpu import MPU as SBRMPU
 from machine import Pin, PWM
+from selfbalancingrobot_mpu import MPU as SBRMPU
 
 import time
 
