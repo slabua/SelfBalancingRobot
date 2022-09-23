@@ -34,7 +34,6 @@ servo_value = None
 
 # IMU
 imu = SBRMPU()
-imu.calib()
 
 while True:
     comp_roll, comp_pitch = imu.get_roll_pitch()

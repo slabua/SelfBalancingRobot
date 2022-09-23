@@ -14,11 +14,11 @@ __author__ = "Salvatore La Bua"
 
 class MPU():
 
-    def __init__(self, sda=0, scl=1, parent=None):
+    def __init__(self, id=0, sda=0, scl=1, calib=True, parent=None):
 
         print("Initialising MPU6050...")
 
-        i2c = I2C(0, sda=Pin(sda), scl=Pin(scl), freq=400000)
+        i2c = I2C(id=id, sda=Pin(sda), scl=Pin(scl), freq=400000)
 
         self.imu = MPU6050(i2c)
         self.imu.accel_range = 0
@@ -34,7 +34,6 @@ class MPU():
         self.gyro_yaw = 0
 
         # imu calib errors
-        # self.read_calib()
         self.aXerr = 0
         self.aYerr = 0
         self.aZerr = 0
@@ -42,8 +41,11 @@ class MPU():
         self.gYerr = 0
         self.gZerr = 0
 
-        print("MPU6050 Initialised.")
         # print(self.imu.accel_range, self.imu.gyro_range)
+        print("MPU6050 Initialised.")
+
+        if calib:
+            self.calib()
 
         self.start = time.ticks_us()
 
