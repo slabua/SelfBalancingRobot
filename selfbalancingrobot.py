@@ -2,9 +2,10 @@
 """Self Balancing Robot
 """
 
-from machine import Pin, PWM
+from machine import Pin
 from PID import PID
 from selfbalancingrobot_mpu import MPU as SBRMPU
+from servo import Servo
 
 import time
 
@@ -25,12 +26,7 @@ led = Pin("LED", Pin.OUT)
 led.off()
 
 # Servo
-servo = PWM(Pin(2))
-servo.freq(50)
-# factor = (8400 - 1600) / 180
-factor = (8400 - 1600) / 180
-# offset = 1600 + (8400 - 1600) / 2
-offset = 1600 + 2800
+servo = Servo(2)
 servo_value = None
 
 # IMU
@@ -54,10 +50,10 @@ while True:
     # servo_value = int(pid(-comp_roll))
 
     if servo_value is None:
-        servo_value = max(min(int(- comp_roll * factor + offset), 8400), 1600)
+        servo_value = max(min(int(- comp_roll), 90), -90)
     else:
         servo_value = int(0.0 * servo_value + 1.0 *
-                          max(min(int(- comp_roll * factor + offset), 8400), 1600))
-    servo.duty_u16(servo_value)
+                          max(min(int(- comp_roll), 90), -90))
+    servo.value(servo_value)
 
     time.sleep(PERIOD)
