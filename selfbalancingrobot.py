@@ -2,13 +2,6 @@
 """Self Balancing Robot
 """
 
-from machine import Pin
-from PID import PID
-from selfbalancingrobot_mpu import MPU as SBRMPU
-from servo import Servo
-
-import time
-
 __author__ = "Salvatore La Bua"
 __copyright__ = "Copyright 2022, Salvatore La Bua"
 __license__ = "GPL"
@@ -16,6 +9,13 @@ __version__ = "0.1.0"
 __maintainer__ = "Salvatore La Bua"
 __email__ = "slabua@gmail.com"
 __status__ = "Development"
+
+from machine import Pin
+from PID import PID
+from selfbalancingrobot_mpu import MPU as SBRMPU
+from servo import Servo
+
+import time
 
 
 # Parameters

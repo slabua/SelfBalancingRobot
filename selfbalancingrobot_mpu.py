@@ -2,14 +2,14 @@
 """Self Balancing Robot
 """
 
+__author__ = "Salvatore La Bua"
+
 from imu import MPU6050
 from machine import Pin, I2C
 
 import math
 import time
 import ujson
-
-__author__ = "Salvatore La Bua"
 
 
 class MPU():
